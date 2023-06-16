@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  </script>
+  <title>USING MULTIPLE REFERENCE AUDIOS AND STYLE EMBEDDING CONSTRAINTS FOR SPEECH SYNTHESIS</title>
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen">
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>
+  </script>
+</head>
+<body>
+  <!--<div class="center">-->
+  <!--This page uses a template from the <a href="http://hi.cs.waseda.ac.jp/~iizuka/projects/completion/">project page</a> of Satoshi Iizuka et al, <i>"Globally and Locally Consistent Image Completion"</i>.-->
+  <!--</div>-->
+  <div class="content">
+    <!--<img src="images/hpcnt_logo.png" width="200" border="0" class="center">-->
+    <h1>USING MULTIPLE REFERENCE AUDIOS AND STYLE EMBEDDING CONSTRAINTS FOR SPEECH SYNTHESIS</h1>
+    <p id="authors">
+      Cheng Gong &nbsp;&nbsp;&nbsp;&nbsp;
+      Longbiao Wang <sup>*</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+      Zhenhua Ling &nbsp;&nbsp;&nbsp;&nbsp;
+      Ju Zhang &nbsp;&nbsp;&nbsp;&nbsp;
+      Jianwu Dang &nbsp;&nbsp;&nbsp;&nbsp;
+      <br><br>
+      <!--<a href="http://hyperconnect.com/", target="_blank">Hyperconnect</a><br>Seoul, Republic of Korea-->
+      <br>Submitted to ICASSP2022 <a href="https://2022.ieeeicassp.org/", target="_blank">ICASSP 2022</a>
+    </p>
+    <div class="center">
+      <a class="button" href="https://arxiv.org/abs/2005.08484">Paper (arXiv)</a>
+    </div>
+    <div class="footnote">
+      *Corresponding author.
+    </div>
+  </div>
+  <div class="content">
+    <h2>Abstract</h2>
+    <p>
+      The end-to-end speech synthesis model can directly take an utterance as reference audio, and generate speech from the text with prosody and speaker characteristics similar to the reference audio. However, an appropriate acoustic embedding must be manually selected during inference. Due to the fact that only the matched text and speech are used in the training process, using unmatched text and speech for inference would cause the model to synthesize speech
+with low content quality. In this study, we propose to mitigate these two problems by using multiple reference audios and style embedding constraints rather than using only the target audio. Multiple reference audios are automatically selected using the sentence similarity determined by Bidirectional Encoder Representations from Transformers (BERT). In addition, we use “target” style embedding from a pre-trained encoder as a constraint by considering the mutual information between the predicted and “target” style embedding. The experimental results show that the proposed model can improve the speech naturalness and content quality with multiple reference audios and can also outperform the baseline model in ABX preference tests of style similarity.
+    </p>
+  </div>
+
+  <div class="content">
+    <h2>Text-to-Speech Samples for Unseen Speakers During Training</h2>
+    <p>
+      These examples are sampled from the evaluation set for Table 1 in the paper.
+      Each column corresponds to a single speaker, and each row corresponds to different models.
+      Our proposed model at last row, <b>Attentron(8-8)</b>, showed the best result from evalutation including MOS in terms of the speaker similarity and speech quality.
+    </p>
+      <table>
+        <thead>
+          <tr>
+            <th></th><th>VCTK p304</th><th>VCTK p311</th><th>VCTK p316</th><th>VCTK p305</th><th>VCTK p306</th><th>VCTK p312</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Text</b></td>
+            <td>It's totally double standards.</td>
+            <td>His third goal was superb.</td>
+            <td>He declined to give further details.</td>
+            <td>We had a reunion last week.</td>
+            <td>You'd think there was a match on today.</td>
+            <td>I think it must be the uniforms.</td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>Ground-truth</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_groundtruth.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_groundtruth.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_groundtruth.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_groundtruth.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_groundtruth.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_groundtruth.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>LDE(1)</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_LDE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_LDE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_LDE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_LDE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_LDE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_LDE1.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>LDE(8)</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_LDE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_LDE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_LDE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_LDE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_LDE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_LDE8.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>GMVAE(1)</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_GMVAE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_GMVAE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_GMVAE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_GMVAE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_GMVAE1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_GMVAE1.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>GMVAE(8)</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_GMVAE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_GMVAE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_GMVAE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_GMVAE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_GMVAE8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_GMVAE8.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td>Attentron(1-1)</td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_proposed1-1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_proposed1-1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_proposed1-1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_proposed1-1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_proposed1-1.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_proposed1-1.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+          </tr>
+          <tr>
+            <td><b>Attentron(8-8)</b></td>
+            <td><audio controls=""><source src="demos/p304_119_WaveRNN_p304_proposed8-8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p311_060_WaveRNN_p311_proposed8-8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p316_062_WaveRNN_p316_proposed8-8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p305_033_WaveRNN_p305_proposed8-8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p306_077_WaveRNN_p306_proposed8-8.wav" type="audio/wav"></audio></td>
+            <td><audio controls=""><source src="demos/p312_043_WaveRNN_p312_proposed8-8.wav" type="audio/wav"></audio></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div class="content">
+    <h2> Methods </h2>
+    <div class="center">
+      <img src="images/architecture.png", width="600">
+      <img src="images/attention_module.png" width="600">
+    </div>
+    <br> <br>
+    In this paper, we propose <i>Attentron</i>, a novel architecture of few-shot TTS for unseen speakers. We adopted two main components for our model:
+    <ul>
+      <li><b>Fine-grained encoder</b>, which includes an attention mechaninsm to extract detailed styles from multiple reference audios.
+        It allows the model to take any number of the reference audios, and the quality improves with more reference audios.
+        The fine-grained encoder generates a variable-length embedding which maintains temporal information.
+      </li>
+      <li><b>Coarse-grained encoder</b>, which extracts overall information of speech and helps to stabilize the outputs.
+      </li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h3>Citation</h3>
+    To refer our work, please cite our paper as follows:
+    <code>
+      @misc{choi2020attentron,<br>
+      &nbsp;&nbsp;title={Attentron: Few-Shot Text-to-Speech Utilizing Attention-Based Variable-Length Embedding},<br>
+      &nbsp;&nbsp;author={Seungwoo Choi and Seungju Han and Dongyoung Kim and Sungjoo Ha},<br>
+      &nbsp;&nbsp;year={2020},<br>
+      &nbsp;&nbsp;eprint={2005.08484},<br>
+      &nbsp;&nbsp;archivePrefix={arXiv},<br>
+      &nbsp;&nbsp;primaryClass={eess.AS}<br>
+      }
+    </code>
+  </div>
+  <div class="center">
+  This page uses a template from the <a href="https://hyperconnect.github.io/MarioNETte/">project page</a> of Ha et al, <i>"MarioNETte: Few-shot Face Reenactment Preserving Identity of Unseen Targets"</i>.
+  </div>
+</body>
+</html>
